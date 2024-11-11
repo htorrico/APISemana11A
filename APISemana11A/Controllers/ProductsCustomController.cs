@@ -50,6 +50,27 @@ namespace APISemana11A.Controllers
             _context.Products.Add(product);
             _context.SaveChanges();
         }
-      
+
+
+        [HttpPost]
+        public void InsertRange(List<Product> products)
+        {
+            //foreach (var item in products)
+            //{
+            //    _context.Products.Add(item);
+            //    _context.SaveChanges();
+            //}            
+            _context.Products.AddRange(products);
+            _context.SaveChanges();
+        }
+
+        [HttpPut]        
+        public void Update(Product product)
+        {
+            _context.Entry(product).State = EntityState.Modified;
+            _context.SaveChanges();
+
+        }
+
     }
 }
