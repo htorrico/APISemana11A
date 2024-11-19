@@ -1,10 +1,15 @@
 ﻿using APISemana11A.Models;
+using APISemana11A.Requests;
+using APISemana11A.Responses;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace APISemana11A.Controllers
 {
+    //[Authorize]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class ProductsCustomController : ControllerBase
@@ -43,13 +48,12 @@ namespace APISemana11A.Controllers
             //    return new Product();            
         }
 
-        [HttpPost]
-        //public void Insert([FromBody] Product product)
-        public void Insert( Product product)
-        {
-            _context.Products.Add(product);
-            _context.SaveChanges();
-        }
+        //[HttpPost]
+        //public void Insert( Product product)
+        //{
+        //    _context.Products.Add(product);
+        //    _context.SaveChanges();
+        //}
 
 
         [HttpPost]
@@ -71,6 +75,66 @@ namespace APISemana11A.Controllers
             _context.SaveChanges();
 
         }
+
+        [HttpPut]
+        public void UpdatePrice(ProductRequestV1 request)
+        {
+            //Busco el producto con la información
+            Product product = _context.Products.Where(x => x.ProductID == request.Id).FirstOrDefault();
+
+            product.Price = request.Price;
+            _context.Entry(product).State = EntityState.Modified;
+            _context.SaveChanges();
+
+        }
+
+        [HttpPost]
+        public void Insert(ProductInsert request)
+        {
+
+            Product product = new Product
+            {
+                Name = request.Name,
+                Price = request.Price,
+                Active = true
+            };
+
+            _context.Products.Add(product);
+            _context.SaveChanges();
+        }
+
+
+        [HttpGet]
+        public List<ProductResponseV1> GetAllPrice()
+        {
+            List<Product> products= _context.Products.ToList();
+
+            var response = products.Select(x => 
+                                            new ProductResponseV1 { 
+                                            Id=x.ProductID,
+                                            Price=x.Price   }
+                                    ).ToList();
+
+            return response;
+
+        }
+
+        [HttpGet]
+        public List<ProductResponseV2> GetAllCategory()
+        {
+            List<Product> products = _context.Products.ToList();
+
+            var response = products.Select(x =>
+                                            new ProductResponseV2
+                                            {
+                                                Id = x.ProductID,
+                                                Category = x.Category
+                                            }
+                                    ).ToList();
+
+            return response;
+        }
+
 
     }
 }

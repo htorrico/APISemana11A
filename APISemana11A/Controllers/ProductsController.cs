@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using APISemana11A.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace APISemana11A.Controllers
 {
+
     [Route("api/[controller]")]
     [ApiController]
     public class ProductsController : ControllerBase
